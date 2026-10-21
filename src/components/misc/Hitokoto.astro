@@ -1,0 +1,29 @@
+<span id="hitokoto-text" class="transition-opacity duration-300">正在加载一言...</span>
+
+<script>
+  function fetchHitokoto() {
+    const el = document.getElementById('hitokoto-text');
+    if (!el) return;
+
+    // 请求一言 API
+    fetch('https://v1.hitokoto.cn/')
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        el.textContent = '一言: ' + data.hitokoto;
+      })
+      .catch(err => {
+        console.error('获取一言失败:', err);
+        el.textContent = '武以止戈，安民合众，陵水经地，厌难折冲'; // 请求失败时的保底文字
+      });
+  }
+
+  // 确保 DOM 加载完成后再执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchHitokoto);
+  } else {
+    fetchHitokoto();
+  }
+</script>

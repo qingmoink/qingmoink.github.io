@@ -40,16 +40,7 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navBarConfig: NavBarConfig = {
-	links: [
-		LinkPreset.Home,
-		LinkPreset.Archive,
-		LinkPreset.About,
-		{
-			name: "GitHub",
-			url: "https://github.com/qingmoink", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-	],
+	links: [LinkPreset.Home, LinkPreset.Archive, LinkPreset.About],
 };
 
 export const profileConfig: ProfileConfig = {
@@ -63,6 +54,11 @@ export const profileConfig: ProfileConfig = {
 			// You will need to install the corresponding icon set if it's not already included
 			// `pnpm add @iconify-json/<icon-set-name>`
 			url: "https://space.bilibili.com/3493264164391349?spm_id_from=333.337.0.0",
+		},
+		{
+			name: "QQ邮箱",
+			icon: "fa6-regular:envelope",
+			url: "https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=3600931060@qq.com",
 		},
 		{
 			name: "GitHub",
