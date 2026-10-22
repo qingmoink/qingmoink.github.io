@@ -1,5 +1,5 @@
 # About
-这里是清沫ink，见习程序员
+这里是清沫ink，软件工程在读
 ::github{repo="qingmoink/qingmoink.github.io"}
 
 <a href="https://space.bilibili.com/3493264164391349?spm_id_from=333.337.0.0" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; margin: 24px 0; padding: 20px; border-radius: 16px; border: 1px solid var(--line-divider); background-color: var(--card-bg); transition: transform 0.2s, box-shadow 0.2s;">
@@ -29,7 +29,7 @@
     </div>
   </div>
 </a>
-<a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=3600931060@qq.com" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; margin: 16px 0; padding: 20px; border-radius: 16px; border: 1px solid var(--line-divider); background-color: var(--card-bg); transition: transform 0.2s;">
+<a href="mailto:me.qingmoink@outlook.com" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; margin: 16px 0; padding: 20px; border-radius: 16px; border: 1px solid var(--line-divider); background-color: var(--card-bg); transition: transform 0.2s;">
 
   <div style="display: flex; justify-content: space-between; align-items: flex-start;">
     

@@ -1,29 +1,151 @@
-<span id="hitokoto-text" class="transition-opacity duration-300">正在加载一言...</span>
+<style>
+  /* 打字机光标动效样式 */
+  #hitokoto-text::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 2px;
+    animation: hitokoto-blink 0.8s infinite;
+    font-weight: bold;
+  }
+  @keyframes hitokoto-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<span id="hitokoto-text" class="transition-opacity duration-300"></span>
 
 <script>
-  function fetchHitokoto() {
+  // 全局变量存储定时器，防止页面切换/重复触发时多条一言同时运行
+  if (window._hitokotoTimer) {
+    clearTimeout(window._hitokotoTimer);
+    window._hitokotoTimer = null;
+  }
+
+  function initHitokoto() {
     const el = document.getElementById('hitokoto-text');
     if (!el) return;
 
-    // 请求一言 API
-    fetch('https://v1.hitokoto.cn/')
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then(data => {
-        el.textContent = '一言: ' + data.hitokoto;
-      })
-      .catch(err => {
-        console.error('获取一言失败:', err);
-        el.textContent = '武以止戈，安民合众，陵水经地，厌难折冲'; // 请求失败时的保底文字
+    // 每次初始化前先清空可能存在的旧定时器
+    if (window._hitokotoTimer) {
+      clearTimeout(window._hitokotoTimer);
+    }
+
+    const loadingText = "正在加载一言……";
+    let currentText = "";   // 当前正在显示的文本
+    let nextText = "";      // 提前在后台缓存的下一句文本
+    let loadingTyped = false; // 标记：加载文字是否打完
+    let initialApiLoaded = false; // 标记：首条API是否请求成功
+
+    // 打字机效果函数
+    function typeWriter(text, speed, callback) {
+      let i = 0;
+      el.textContent = "";
+      function type() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          window._hitokotoTimer = setTimeout(type, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+      type();
+    }
+
+    // 删除文字效果函数
+    function deleteWriter(speed, callback) {
+      let text = el.textContent;
+      let i = text.length;
+      function del() {
+        if (i > 0) {
+          el.textContent = text.substring(0, i - 1);
+          i--;
+          window._hitokotoTimer = setTimeout(del, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+      del();
+    }
+
+    // 封装 API 请求函数
+    function fetchHitokotoAPI(callback) {
+      fetch('https://v1.hitokoto.cn/')
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          callback('一言: ' + data.hitokoto);
+        })
+        .catch(err => {
+          console.error('获取一言失败:', err);
+          callback('一言: 武以止戈，安民合众，陵水经地，厌难折冲'); // 保底文字
+        });
+    }
+
+    // 核心循环：当前句打印完成后触发
+    function startLoop() {
+      // 1. 在上一句显示/停顿的同时，提前在后台异步缓存下一句
+      fetchHitokotoAPI((fetchedText) => {
+        nextText = fetchedText;
       });
+
+      // 2. 停顿 6 秒（6000毫秒）后开始删除当前一言
+      window._hitokotoTimer = setTimeout(() => {
+        deleteWriter(60, () => {
+          // 3. 删除完毕后，停顿 1 秒（1000毫秒）让光标静止闪烁，再开始打印新一言
+          window._hitokotoTimer = setTimeout(() => {
+            currentText = nextText || '一言: 武以止戈，安民合众，陵水经地，厌难折冲';
+            typeWriter(currentText, 100, () => {
+              startLoop(); // 进入下一轮循环
+            });
+          }, 1000); // 这里的 1000 代表删除完后的停顿毫秒数
+        });
+      }, 6000); 
+    }
+
+    // 检查首次加载是否两步都已就绪
+    function checkAndProceed() {
+      if (loadingTyped && initialApiLoaded) {
+        window._hitokotoTimer = setTimeout(() => {
+          deleteWriter(60, () => {
+            // 首次的“正在加载”删除完后，同样停顿 1 秒再打印第一条一言
+            window._hitokotoTimer = setTimeout(() => {
+              typeWriter(currentText, 100, () => {
+                startLoop();
+              });
+            }, 1000);
+          });
+        }, 400);
+      }
+    }
+
+    // 1. 第一步：开始打印加载文字
+    typeWriter(loadingText, 100, () => {
+      loadingTyped = true;
+      checkAndProceed();
+    });
+
+    // 2. 第二步：异步请求首条一言 API
+    fetchHitokotoAPI((fetchedText) => {
+      currentText = fetchedText;
+      initialApiLoaded = true;
+      checkAndProceed();
+    });
   }
 
-  // 确保 DOM 加载完成后再执行
+  // 绑定加载事件
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fetchHitokoto);
+    document.addEventListener('DOMContentLoaded', initHitokoto);
   } else {
-    fetchHitokoto();
+    initHitokoto();
   }
+
+  /**
+   * 适配静态博客无刷新跳转（如 PJAX、Swup 等）
+   */
+  // document.addEventListener('pjax:complete', initHitokoto);   
+  // document.addEventListener('swup:contentReplaced', initHitokoto); 
 </script>

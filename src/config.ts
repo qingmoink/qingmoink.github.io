@@ -56,9 +56,9 @@ export const profileConfig: ProfileConfig = {
 			url: "https://space.bilibili.com/3493264164391349?spm_id_from=333.337.0.0",
 		},
 		{
-			name: "QQ邮箱",
+			name: "邮箱",
 			icon: "fa6-regular:envelope",
-			url: "https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=3600931060@qq.com",
+			url: "mailto:me.qingmoink@outlook.com",
 		},
 		{
 			name: "GitHub",
@@ -78,4 +78,11 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
 	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
+};
+
+export const umamiConfig = {
+	enable: true,
+	baseUrl: "https://cloud.umami.is",
+	websiteId: "72532bd4-320b-4846-8e78-12d3ee9c5d57", // 截图中的 Website ID
+	shareId: "UqhKdRkUrBb3GrcX", // 分享 ID
 };
