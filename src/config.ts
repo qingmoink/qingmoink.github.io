@@ -17,7 +17,7 @@ export const siteConfig: SiteConfig = {
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/2.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "assets/images/2.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: false, // Display the credit text of the banner image
@@ -44,7 +44,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/img.jpeg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "assets/images/img.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "清沫ink",
 	bio: "武以止戈，安民合众，陵水经地，厌难折冲",
 	links: [
